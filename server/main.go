@@ -20,7 +20,7 @@ type FileItem struct {
 }
 
 func main() {
-	godotenv.Load(".env")
+	godotenv.Load("../.env")
 
 	http.HandleFunc("POST /sync", handleSync)
 
@@ -29,6 +29,8 @@ func main() {
 }
 
 func handleSync(w http.ResponseWriter, r *http.Request) {
+	folder := os.Getenv("FOLDER")
+
 	var files SyncRequest
 	err := json.NewDecoder(r.Body).Decode(&files)
 	if err != nil {
@@ -37,11 +39,12 @@ func handleSync(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, f := range files {
-		path := filepath.Join(os.Getenv("FOLDER"), f.Id)
+		path := filepath.Join(folder, f.Id)
 		if f.IsDir {
 			err := os.Mkdir(path, 0755)
 			if err != nil {
 				if os.IsNotExist(err) {
+					os.Mkdir(folder, 0755)
 					continue
 				}
 				fmt.Println(err.Error())
