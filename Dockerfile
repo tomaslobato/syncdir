@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
+RUN apt-get update && apt-get install -y docker.io
+
 RUN go mod download
 
 COPY server ./server

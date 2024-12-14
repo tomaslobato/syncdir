@@ -8,6 +8,8 @@ services:
       - 5000:5000
     volumes:
       - ${FOLDER}:/app/files
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - FOLDER=/app/files
+    user: "33:33"
     restart: unless-stopped

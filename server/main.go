@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/gofiber/fiber/v2/log"
@@ -60,6 +61,13 @@ func handleSync(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Printf("created file at %s\n", path)
+	}
+
+	cmd := exec.Command("docker", "exec", "-u", "33", "-it", "nextcloud", "php", "occ", "files:scan", "--all")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Error executing command: ", err.Error())
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -70,5 +70,6 @@ func RecursiveGetFiles(currentDir string, ROOT string) ([]FileItem, error) {
 			files = append(files, file)
 		}
 	}
+
 	return files, nil
 }
